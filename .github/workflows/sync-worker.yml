@@ -1,0 +1,28 @@
+name: Auto Sync Vless Worker JS
+
+on:
+  schedule:
+    - cron: "0 1 * * *"  # 每天凌晨 1 点执行
+  workflow_dispatch:      # 支持手动执行
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 初始化仓库
+        uses: actions/checkout@v4
+
+      - name: 下载最新 JS 文件
+        run: |
+          echo -e "\033[34m[下载最新 vless.js]\033[0m"
+          curl -L -o "vless无需proxyip的nat64套壳版 (推荐使用).js" "https://raw.githubusercontent.com/yonggekkk/Cloudflare-vless-trojan/refs/heads/main/Vless_workers_pages/vless%E6%97%A0%E9%9C%80proxyip%E7%9A%84nat64%E5%A5%97%E5%A3%B3%E7%89%88%20(%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8).js"
+
+      - name: 自动提交
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔄 自动同步最新 JS"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          push_options: --force
